@@ -79,11 +79,28 @@ public:
      */
     virtual void addTestDevice(const QString& hashedDeviceId) = 0;
 
+    //StartAd
+    virtual void initStartAd() = 0;
+    virtual void setStartAdId(const QString& id) = 0;
+    virtual void setStartAdBannerSize(const int width,const int height) = 0;
+    virtual void setStartAdBannerPosition(const int x,const int y) = 0;
+
+    virtual int startAdBannerHeight()const = 0;
+    virtual int startAdBannerWidth()const = 0;
+    virtual int startAdBannerX()const = 0;
+    virtual int startAdBannerY()const = 0;
+
+    virtual void showStartAd() = 0;
+    virtual void hideStartAd() = 0;
+
+    virtual float getDensity()const = 0;
+
 signals:
     void loaded();
     void loading();
     void closed();
     void clicked();
+
 };
 
 #endif // IQTADMOBBANNER_H

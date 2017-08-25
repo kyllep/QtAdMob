@@ -14,7 +14,7 @@ SOURCES += \
     $$PWD/QtAdMobInterstitialAndroid.cpp \
     $$PWD/QtAdMobInterstitialDummy.cpp \
     $$PWD/QtAdmobBanner.cpp \
-    $$PWD/QtAdmobInterstitial.cpp
+    $$PWD/QtAdmobInterstitial.cpp \
 
 OBJECTIVE_SOURCES += \
     $$PWD/QtAdMobBannerIos.mm \
@@ -59,10 +59,10 @@ ios {
 android {
     android:QT += androidextras gui-private
 
-    !exists($$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob)
-    {
-        copydata.commands += $(COPY_DIR) $$shell_path($$PWD/platform/android/src) $$shell_path($$ANDROID_PACKAGE_SOURCE_DIR)
-    }
+#    !exists($$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob)
+#    {
+        copydata.commands += $(COPY_DIR) $$shell_path($$PWD/platform/android/src) $$shell_path($$ANDROID_PACKAGE_SOURCE_DIR/src)
+#    }
 
     first.depends = $(first) copydata
     export(first.depends)

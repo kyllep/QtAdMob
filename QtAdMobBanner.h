@@ -4,6 +4,7 @@
 #include "QtAdMobBannerAndroid.h"
 #include "QtAdMobBannerIos.h"
 #include "QtAdMobBannerDummy.h"
+class QTimer;
 
 inline IQtAdMobBanner* CreateQtAdMobBanner()
 {
@@ -18,6 +19,8 @@ inline IQtAdMobBanner* CreateQtAdMobBanner()
 
 class QmlAdMobBanner : public QObject
 {
+    Q_OBJECT
+
     Q_PROPERTY(QString unitId READ unitId WRITE setUnitId NOTIFY unitIdChanged)
     Q_PROPERTY(Sizes size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QSize sizeInPixels READ sizeInPixels NOTIFY sizeChanged)
@@ -29,7 +32,20 @@ class QmlAdMobBanner : public QObject
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool isLoaded READ isLoaded NOTIFY loaded)
 
-    Q_OBJECT
+
+    //StartAd
+    Q_PROPERTY(bool startAdBannerEnabled READ StartAdBannerEnabled WRITE setStartAdBannerEnabled NOTIFY startAdBannerEnabledChanged)
+    Q_PROPERTY(int startAdBannerHeight READ StartAdBannerHeight NOTIFY startAdBannerHeightChanged)
+    Q_PROPERTY(int startAdBannerWidth READ StartAdBannerWidth NOTIFY startAdBannerWidthChanged)
+    Q_PROPERTY(QPoint startAdBannerPosition READ StartAdBannerPosition WRITE setStartAdBannerPosition)
+    Q_PROPERTY(QSize startAdBannerSize READ StartAdBannerSize WRITE setStartAdBannerSize)
+    Q_PROPERTY(int startAdBannerRealX READ startAdBannerRealX)
+    Q_PROPERTY(int startAdBannerRealY READ startAdBannerRealY)
+    Q_PROPERTY(bool startAdBannerVisible READ StartAdBannerVisible WRITE setStartAdBannerVisible NOTIFY startAdBannerVisibleChanged)
+    Q_PROPERTY(QString startAdId READ getStartAdId WRITE setStartAdId NOTIFY startAdIdChanged)
+    Q_PROPERTY(QStringList testDevices READ getTestDevices WRITE setTestDevices NOTIFY testDevicesChanged)
+
+
 public:
     enum Sizes
     {
@@ -145,11 +161,66 @@ signals:
     void closed();
     void clicked();
 
+    //startAd
+    void  startAdBannerShowed();
+    void  startAdBannerHeightChanged(int height);
+    void  startAdBannerWidthChanged(int width);
+    void startAdIdChanged();
+    void startAdBannerVisibleChanged();
+    void startAdBannerEnabledChanged();
+    void testDevicesChanged();
+
+public slots:
+    void init();
+    void setStartAdBannerEnabled(const bool StartAdBannerEnabled);
+    bool StartAdBannerEnabled() const;
+    int StartAdBannerHeight() const;
+    int StartAdBannerWidth() const;
+    void setStartAdBannerPosition(const QPoint StartAdBannerPosition);
+    QPoint StartAdBannerPosition() const;
+    void setStartAdBannerSize(const QSize StartAdBannerSize);
+    QSize StartAdBannerSize() const;
+    int startAdBannerRealX();
+    int startAdBannerRealY();
+    void setStartAdId(const QString &StartAdId);
+    QString getStartAdId()const;
+    void setStartAdBannerVisible(const bool visible);
+    bool StartAdBannerVisible()const;
+    QStringList getTestDevices()const;
+    void setTestDevices(const QStringList &testDevices);
+    void showStartAdBanner();
+    void hideStartAdBanner();
+    float dp();
+    float mm();
+    float pt();
+        void adctlTimerSlot();
+//    IQtAdMobBanner* getInstance();
+
 private:
     IQtAdMobBanner* QML() const;
 
 private:
     IQtAdMobBanner* m_Instance;
+
+protected:
+    QTimer *adctlTimer;
+    //StartAd
+    bool m_StartAdBannerEnabled = false;
+    bool m_StartAdBannerVisible = false;
+    QString m_StartAdId;
+    QStringList m_testDevices;
+    bool m_AdInitialized = false;
+    int cacheStartAdBannerHeight;
+    int cacheStartAdBannerWidth;
+    QPoint m_StartAdBannerPosition;
+    QSize m_StartAdBannerSize;
+    bool m_isStartAdBannerShowed = false;
+    bool m_StartAdBannerShowHideTrigger = false;
+    bool m_StartAdWidthAlredyGreatThanZero = false;
+    float m_dp;
+    float m_pt;
+    float m_mm;
+
 };
 
 #endif // QTADMOBBANNER_H

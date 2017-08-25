@@ -74,6 +74,26 @@ public:
     typedef QMap<uint32_t, QtAdMobBannerAndroid*> TInstances;
     static const TInstances& Instances();
 
+
+    virtual void initStartAd();
+    virtual void setStartAdId(const QString& id);
+    virtual void setStartAdBannerSize(const int width,const int height);
+    virtual void setStartAdBannerPosition(const int x,const int y);
+
+    virtual int startAdBannerHeight()const;
+    virtual int startAdBannerWidth()const;
+    virtual int startAdBannerX()const;
+    virtual int startAdBannerY()const;
+
+    virtual void showStartAd();
+    virtual void hideStartAd();
+
+    virtual float getDensity()const;
+
+    virtual int adMobBannerX()const;
+    virtual int adMobBannerY()const;
+
+
 private:
     bool isValid() const;
 

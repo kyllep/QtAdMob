@@ -2,7 +2,9 @@
 
 #if (__ANDROID_API__ >= 9)
 
+#include <QtAndroid>
 #include <QAndroidJniObject>
+#include <QAndroidJniEnvironment>
 #include <qpa/qplatformnativeinterface.h>
 #include <QGuiApplication>
 
@@ -230,5 +232,191 @@ bool QtAdMobBannerAndroid::isValid() const
 {
     return (m_Activity != 0 && m_Activity->isValid());
 }
+
+
+
+
+
+
+//-------------------- StartAd -------------------------------------------------
+
+
+void QtAdMobBannerAndroid::initStartAd(){
+    m_Activity->callMethod<void>("InitializeStartAdBanner");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+void QtAdMobBannerAndroid::setStartAdId(const QString& id){
+    QAndroidJniObject param1 = QAndroidJniObject::fromString(id);
+    m_Activity->callMethod<void>("SetStartAdId", "(Ljava/lang/String;)V", param1.object<jstring>());
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+void QtAdMobBannerAndroid::setStartAdBannerSize(const int width, const int height){
+    m_Activity->callMethod<void>("SetStartAdBannerSize", "(II)V", width, height);
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+void QtAdMobBannerAndroid::setStartAdBannerPosition(const int x, const int y){
+    m_Activity->callMethod<void>("SetStartAdBannerPosition", "(II)V", x, y);
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+int QtAdMobBannerAndroid::startAdBannerHeight() const{
+    return m_Activity->callMethod<int>("GetStartAdBannerHeight");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+int QtAdMobBannerAndroid::startAdBannerWidth() const{
+    return m_Activity->callMethod<int>("GetStartAdBannerWidth");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+int QtAdMobBannerAndroid::startAdBannerX() const{
+    return m_Activity->callMethod<int>("GetStartAdBannerX");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+int QtAdMobBannerAndroid::startAdBannerY() const{
+    return m_Activity->callMethod<int>("GetStartAdBannerY");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+void QtAdMobBannerAndroid::showStartAd(){
+    m_Activity->callMethod<void>("ShowStartAdBanner");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+void QtAdMobBannerAndroid::hideStartAd(){
+    m_Activity->callMethod<void>("HideStartAdBanner");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+}
+
+float QtAdMobBannerAndroid::getDensity() const{
+    QAndroidJniObject qtActivity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
+    QAndroidJniObject resources = qtActivity.callObjectMethod("getResources", "()Landroid/content/res/Resources;");
+    QAndroidJniObject displayMetrics = resources.callObjectMethod("getDisplayMetrics", "()Landroid/util/DisplayMetrics;");
+    int density = displayMetrics.getField<int>("densityDpi");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+    return density;
+}
+
+int QtAdMobBannerAndroid::adMobBannerX() const{
+    int xval = m_Activity->callMethod<int>("GetAdMobBannerX");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+    return xval;
+}
+
+int QtAdMobBannerAndroid::adMobBannerY() const{
+    int yval = m_Activity->callMethod<int>("GetAdMobBannerY");
+    // Checking exceptions
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Printing exception message
+        env->ExceptionDescribe();
+
+        // Clearing exceptions
+        env->ExceptionClear();
+    }
+    return yval;
+}
+
+//------------------------------------------------------------------------------
 
 #endif // __ANDROID_API__
