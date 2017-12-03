@@ -648,6 +648,7 @@ public class QtAdMobActivity extends QtActivity
         {
             m_AdBannerView.resume();
         }
+        hideStatusBar();
     }
     @Override
     public void onDestroy()
