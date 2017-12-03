@@ -24,6 +24,9 @@ import org.qtproject.qt5.android.bindings.QtApplication;
 import java.util.ArrayList;
 
 
+import android.view.WindowManager;
+import android.graphics.Color;
+import android.content.Context;
 
 
 
@@ -47,6 +50,8 @@ public class QtAdMobActivity extends QtActivity
     protected boolean m_StartAdBannerShowed = false;
     protected int m_startAdWidth = 0;
     protected int m_startAdHeight = 0;
+
+
 
     public int GetStatusBarHeight()
     {
@@ -588,10 +593,42 @@ public class QtAdMobActivity extends QtActivity
         });
     }
 
+    public void setTransparrent()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+               getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+               getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+               getWindow().setStatusBarColor(Color.TRANSPARENT);
+           } else {
+               getWindow().setFlags( WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                                   , WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+           }
+       }
+    }
+
+    public void hideStatusBar()
+    {
+
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+//            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+            // status bar is hidden, so hide that too if necessary.
+//            ActionBar actionBar = getActionBar();
+//            actionBar.hide();
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        hideStatusBar();
+//        setTransparrent();
+
     }
 
     @Override
