@@ -51,6 +51,8 @@ public class QtAdMobActivity extends QtActivity
     protected int m_startAdWidth = 0;
     protected int m_startAdHeight = 0;
 
+    protected int uiOptions = 0;
+
 
 
     public int GetStatusBarHeight()
@@ -607,19 +609,30 @@ public class QtAdMobActivity extends QtActivity
        }
     }
 
+
+
     public void hideStatusBar()
     {
+        uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        restoreStatusBarState();
+    }
 
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-//            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-            // Remember that you should never show the action bar if the
-            // status bar is hidden, so hide that too if necessary.
-//            ActionBar actionBar = getActionBar();
-//            actionBar.hide();
+    public void showStatusBar()
+    {
+        uiOptions = 0;
+        restoreStatusBarState();
+    }
 
+    public void restoreStatusBarState()
+    {
+        Log.d("MyActivity", "restoreStatusBarState " + uiOptions);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     @Override
@@ -627,14 +640,24 @@ public class QtAdMobActivity extends QtActivity
     {
         super.onCreate(savedInstanceState);
         hideStatusBar();
-//        setTransparrent();
-
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        super.onWindowFocusChanged(hasFocus);
+        Log.d("MyActivity", "onWindowFocusChanged " + hasFocus);
+        if (hasFocus) {
+            restoreStatusBarState();
+        }
+    }
+
 
     @Override
     public void onPause()
     {
         super.onPause();
+        Log.d("MyActivity", "onPause");
         if (m_AdBannerView != null)
         {
             m_AdBannerView.pause();
@@ -644,11 +667,13 @@ public class QtAdMobActivity extends QtActivity
     public void onResume()
     {
         super.onResume();
+        Log.d("MyActivity", "onResume");
         if (m_AdBannerView != null)
         {
             m_AdBannerView.resume();
         }
-        hideStatusBar();
+//        showStatusBar();
+//        restoreStatusBarState();
     }
     @Override
     public void onDestroy()
