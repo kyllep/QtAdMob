@@ -52,6 +52,7 @@ public class QtAdMobActivity extends QtActivity
     protected int m_startAdHeight = 0;
 
     protected int uiOptions = 0;
+    protected boolean showNavigation = true;
 
 
 
@@ -610,22 +611,56 @@ public class QtAdMobActivity extends QtActivity
     }
 
 
+    public void applyNavigationBarState()
+    {
+        if (!showNavigation)
+        {
+            if (uiOptions != 0)
+            {
+                // чтобы спрятать устанавливаем все флаги
+                uiOptions |=  View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
+        }
+        else if ((View.SYSTEM_UI_FLAG_HIDE_NAVIGATION & uiOptions) != 0)
+        {
+            // чтобы показать убираем флаги, если есть
+            uiOptions &= ~(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+        restoreStatusBarState();
+    }
+
+    public void showNavigationBar()
+    {
+       showNavigation = true;
+       applyNavigationBarState();
+    }
+
+    public void hideNavigationBar()
+    {
+       showNavigation = false;
+       applyNavigationBarState();
+    }
+
 
     public void hideStatusBar()
     {
         uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        restoreStatusBarState();
+                  | View.SYSTEM_UI_FLAG_FULLSCREEN
+                  | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                  | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        applyNavigationBarState();
+//        restoreStatusBarState();
     }
 
     public void showStatusBar()
     {
         uiOptions = 0;
-        restoreStatusBarState();
+        applyNavigationBarState();
     }
 
     public void restoreStatusBarState()
