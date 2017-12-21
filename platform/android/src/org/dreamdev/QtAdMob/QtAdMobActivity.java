@@ -1,7 +1,5 @@
 package org.dreamdev.QtAdMob;
 
-import com.startad.lib.SADView;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -45,12 +43,6 @@ public class QtAdMobActivity extends QtActivity
     private int m_StatusBarHeight = 0;
     private int m_ReadyToRequest = 0x00;
 
-    protected String m_StartAdId;
-    protected SADView m_StartAdBannerView;
-    protected boolean m_StartAdBannerShowed = false;
-    protected int m_startAdWidth = 0;
-    protected int m_startAdHeight = 0;
-
     protected int uiOptions = 0;
     protected boolean showNavigation = true;
 
@@ -81,203 +73,6 @@ public class QtAdMobActivity extends QtActivity
 
     return result;
 }
-
-//--------------------- StartAd ------------------------------------------------
-
-   public void SetStartAdId(final String StartAdId)
-   {
-       runOnUiThread(new Runnable()
-       {
-           public void run()
-           {
-               m_StartAdId = StartAdId;
-           }
-       });
-   }
-
-    protected FrameLayout.LayoutParams getLayoutParams()
-    {
-        Log.d("getLayoutParams", ""+m_startAdWidth);
-        FrameLayout.LayoutParams layoutParams;
-        if (m_startAdWidth == 0) {
-            layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT);
-        } else {
-            layoutParams = new FrameLayout.LayoutParams(m_startAdWidth,
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT);
-        }
-        return layoutParams;
-    }
-
-    public void SetStartAdBannerPosition(final int x, final int y)
-    {
-        Log.d("SetStartAdBannerPosition", ""+m_startAdWidth);
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-               FrameLayout.LayoutParams layoutParams = getLayoutParams();
-
-               m_StartAdBannerView.setLayoutParams(layoutParams);
-               m_StartAdBannerView.setX(x);
-               m_StartAdBannerView.setY(y);
-            }
-        });
-    }
-
-    public void SetStartAdBannerSize(final int width, final int height)
-    {
-        m_startAdWidth = width;
-        m_startAdHeight = height;
-        Log.d("SetStartAdBannerSize", ""+m_startAdWidth);
-//        runOnUiThread(new Runnable()
-//        {
-//            public void run()
-//            {
-//                m_startAdWidth = width;
-//                m_startAdHeight = height;
-//                FrameLayout.LayoutParams layoutParams = getLayoutParams();
-
-//                m_StartAdBannerView.setLayoutParams(layoutParams);
-//            }
-//        });
-    }
-
-    public boolean IsStartAdBannerShowed()
-    {
-        return m_StartAdBannerShowed;
-    }
-
-    public int GetStartAdBannerWidth()
-    {
-        return m_StartAdBannerView.getWidth();
-    }
-
-    public int GetStartAdBannerHeight()
-    {
-        return m_StartAdBannerView.getHeight();
-    }
-
-    public void InitializeStartAdBanner()
-    {
-        final QtAdMobActivity self = this;
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-                if (m_StartAdBannerView != null)
-                {
-                    return;
-                }
-
-                m_StatusBarHeight = GetStatusBarHeight();
-
-                m_StartAdBannerView = new SADView(self, m_StartAdId);
-
-                View view = getWindow().getDecorView().getRootView();
-                if (view instanceof ViewGroup)
-                {
-                    m_ViewGroup = (ViewGroup) view;
-
-                    FrameLayout.LayoutParams layoutParams = getLayoutParams();
-
-                    m_StartAdBannerView.setLayoutParams(layoutParams);
-                    m_StartAdBannerView.setX(0);
-                    m_StartAdBannerView.setY(-300);
-                    m_ViewGroup.addView(m_StartAdBannerView);
-
-                    m_StartAdBannerView.setAdListener(new SADView.SADListener() {
-                        @Override
-                        public void onReceiveAd() {
-                            Log.d("SADView", "SADListener onReceiveId");
-                        }
-
-                        @Override
-                        public void onShowedAd() {
-                            Log.d("SADView", "SADListener onShowedAd");
-                            m_StartAdBannerShowed = true;
-                        }
-
-                        @Override
-                        public void onError(SADView.ErrorCode error) {
-                            Log.d("SADView", "SADListener onError " + error);
-                        }
-
-                        @Override
-                        public void onAdClicked() {
-                            Log.d("SADView", "SADListener onAdClicked");
-                        }
-
-                        @Override
-                        public void noAdFound() {
-                            Log.d("SADView", "SADListener noAdFound");
-                        }
-                    });
-
-                    //Load ad for currently active language in app
-                    m_StartAdBannerView.loadAd(SADView.LANGUAGE_RU); //or this.sadView.loadAd(SADView.LANGUAGE_RU);
-                }
-            }
-        });
-    }
-
-    public int GetStartAdBannerX()
-    {
-      if(m_StartAdBannerView!=null){
-          return Math.round(m_StartAdBannerView.getX());
-      }else{
-          return 0;
-      }
-    }
-
-    public int GetStartAdBannerY()
-    {
-      if(m_StartAdBannerView!=null){
-          return Math.round(m_StartAdBannerView.getY());
-      }else{
-          return 0;
-      }
-    }
-
-
-    public void ShowStartAdBanner()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (IsStartAdBannerShowed())
-                {
-                    return;
-                }
-
-                m_StartAdBannerView.setVisibility(View.VISIBLE);
-                m_StartAdBannerShowed = true;
-            }
-        });
-    }
-
-    public void HideStartAdBanner()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (!IsStartAdBannerShowed())
-                {
-                    return;
-                }
-
-                m_StartAdBannerView.setVisibility(View.GONE);
-                m_StartAdBannerShowed = false;
-            }
-        });
-    }
-
-
-//--------------------------------------------------------------------
 
 
     public void SetAdBannerUnitId(final String adId)
@@ -717,9 +512,6 @@ public class QtAdMobActivity extends QtActivity
         if (m_AdBannerView != null)
         {
             m_AdBannerView.destroy();
-        }
-        if(m_StartAdBannerView != null) {
-           m_StartAdBannerView.destroy();
         }
     }
 
