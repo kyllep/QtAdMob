@@ -469,7 +469,7 @@ public class QtAdMobActivity extends QtActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        hideStatusBar();
+//        hideStatusBar();
     }
 
     @Override
